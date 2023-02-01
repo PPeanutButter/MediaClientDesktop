@@ -8,6 +8,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import model.SharedViewModel
 import ui.screens.LoginScreen
+import utils.SettingManager
 
 @Composable
 @Preview
@@ -18,6 +19,7 @@ fun App() {
 }
 
 fun main() = application {
+    SettingManager.init()
     Window(onCloseRequest = ::exitApplication,
         title = "花生酱的NAS",
         icon = painterResource("logo.png"),

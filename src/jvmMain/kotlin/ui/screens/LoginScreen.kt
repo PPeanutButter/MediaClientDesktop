@@ -7,6 +7,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,15 +33,16 @@ import model.ConfigurationDataStore
 fun LoginScreen(viewModel: SharedViewModel) {
     val loginState = viewModel.loginState
     val configurationDataStore = ConfigurationDataStore()
+    val scope = rememberCoroutineScope()
     when(loginState.value){
         is RequestStore.Success -> {
-//            AlbumScreen(viewModel = viewModel){ // onLogout
-//                viewModel.setConfiguration(Configuration.Empty)
-//                scope.launch {
-//                    configurationDataStore.saveConfiguration(Configuration.Empty)
-//                }
-//                loginState.value = RequestStore.Empty()
-//            }
+            AlbumScreen(viewModel = viewModel){ // onLogout
+                viewModel.setConfiguration(Configuration.Empty)
+                scope.launch {
+                    configurationDataStore.saveConfiguration(Configuration.Empty)
+                }
+                loginState.value = RequestStore.Empty()
+            }
         }
         else -> {
             LoginPanel(viewModel = viewModel, isLogin = loginState.value is RequestStore.Loading, configurationDataStore = configurationDataStore)
@@ -129,8 +132,8 @@ fun LoginPanel(viewModel: SharedViewModel, isLogin: Boolean, configurationDataSt
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                             trailingIcon = {
                                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                                    Icon(painter = if (!isPasswordVisible) painterResource("visibility_black_24dp.svg") else
-                                        painterResource("visibility_off_black_24dp.svg"), contentDescription = null)
+                                    Icon(imageVector = if (!isPasswordVisible) Icons.Rounded.Visibility else
+                                        Icons.Rounded.VisibilityOff, contentDescription = null)
                                 }
                             },
                             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
