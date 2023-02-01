@@ -9,13 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import gson.Album
+import model.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlbumCard(album: Album) {
+fun AlbumCard(album: Album, viewModel: SharedViewModel) {
     OutlinedCard(
         onClick = {
-            //todo context.startActivity(Intent(context, EpisodeActivity::class.java).putExtra("ALBUM", album.relativePath))
+            viewModel.episodeState.value = album.relativePath
         }, modifier = Modifier.padding(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {

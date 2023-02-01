@@ -5,7 +5,7 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-group = "com.peanut.pc.nnas"
+group = "com.peanut.pc.nas"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -49,8 +49,19 @@ compose.desktop {
         //# outputs are written to desktop/build/compose/binaries
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "nas"
+            packageName = "花生酱的NAS"
             packageVersion = "1.0.0"
+            description = "NAS的PC客户端，适用与Windows、Linux与MacOS"
+            copyright = "© 2023 PeanutButter. All rights reserved."
+            macOS {
+                iconFile.set(project.file("icon.png"))
+            }
+            windows {
+                iconFile.set(project.file("logo.ico"))
+            }
+            linux {
+                iconFile.set(project.file("logo.png"))
+            }
         }
     }
 }

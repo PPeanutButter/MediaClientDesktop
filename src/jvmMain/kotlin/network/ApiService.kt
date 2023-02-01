@@ -72,4 +72,8 @@ interface ApiService {
 
     @GET("/getCover")
     suspend fun getCover(@Query("cover") path: String): ResponseBody
+    @GET("/getFile/get_album_post")
+    suspend fun getPostImage(@Query("path") path: String): ResponseBody
+    @GET("/getVideoPreview")
+    suspend fun getVideoPreview(@Query("path") path: String): ResponseBody
 }

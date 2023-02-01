@@ -7,8 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -36,6 +38,13 @@ fun DownloadAction(onClicked: () -> Unit) {
 fun BookmarkAction(onClicked: () -> Unit) {
     IconButton(onClick = { onClicked() }, modifier = Modifier.size(24.dp)) {
         Icon(imageVector = Icons.Rounded.BookmarkAdd, contentDescription = null)
+    }
+}
+
+@Composable
+fun BackAction(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current, onClicked: () -> Unit) {
+    IconButton(onClick = { onClicked() }, modifier = modifier.size(24.dp)) {
+        Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null, tint = tint)
     }
 }
 

@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SharedViewModel {
+    init {
+        println("SharedViewModel init")
+    }
     var albumResponse: MutableState<RequestStore<Album>> = mutableStateOf(RequestStore.Empty())
 
     fun getAlbumList(){
@@ -56,4 +59,6 @@ class SharedViewModel {
     fun setConfiguration(configuration: Configuration) {
         _configuration.value = configuration
     }
+
+    var episodeState: MutableState<String> = mutableStateOf("")
 }

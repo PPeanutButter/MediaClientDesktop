@@ -16,13 +16,14 @@ import model.SharedViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumList(paddingValues: PaddingValues,
-              albums: MutableList<Album>
+              albums: MutableList<Album>,
+              viewModel: SharedViewModel
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         modifier = Modifier.padding(top = paddingValues.calculateTopPadding(), start = 4.dp, end = 4.dp)) {
         items(items = albums, key = { item: Album -> item.hashKey }){
-            AlbumCard(album = it)
+            AlbumCard(album = it, viewModel = viewModel)
         }
     }
 }
@@ -37,7 +38,8 @@ fun AlbumListRequester(paddingValues: PaddingValues, viewModel: SharedViewModel)
         }
         is RequestStore.Success -> {
             AlbumList(paddingValues = paddingValues,
-                albums = result._datas)
+                albums = result._datas,
+                viewModel = viewModel)
         }
         is RequestStore.Failure -> {
             //todo error message display

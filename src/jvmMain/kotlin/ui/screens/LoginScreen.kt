@@ -1,5 +1,6 @@
 package ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,20 +29,28 @@ import data.RequestStore
 import model.SharedViewModel
 import kotlinx.coroutines.launch
 import model.ConfigurationDataStore
+import model.EpisodeViewModel
 
 @Composable
 fun LoginScreen(viewModel: SharedViewModel) {
+    val episodeViewModel by remember { mutableStateOf(EpisodeViewModel()) }
     val loginState = viewModel.loginState
     val configurationDataStore = ConfigurationDataStore()
     val scope = rememberCoroutineScope()
     when(loginState.value){
         is RequestStore.Success -> {
-            AlbumScreen(viewModel = viewModel){ // onLogout
-                viewModel.setConfiguration(Configuration.Empty)
-                scope.launch {
-                    configurationDataStore.saveConfiguration(Configuration.Empty)
+            val startActivity = viewModel.episodeState.value.isNotEmpty()
+            AnimatedVisibility(startActivity){
+                EpisodeScreen(viewModel, episodeViewModel, viewModel.episodeState.value)
+            }
+            if(!startActivity){
+                AlbumScreen(viewModel = viewModel){ // onLogout
+                    viewModel.setConfiguration(Configuration.Empty)
+                    scope.launch {
+                        configurationDataStore.saveConfiguration(Configuration.Empty)
+                    }
+                    loginState.value = RequestStore.Empty()
                 }
-                loginState.value = RequestStore.Empty()
             }
         }
         else -> {
@@ -61,17 +70,20 @@ fun LoginPanel(viewModel: SharedViewModel, isLogin: Boolean, configurationDataSt
     val loginState = viewModel.loginState
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(configuration.value) {
         viewModel.loadConfiguration(configurationDataStore)
-    }
-
-    if (loginState.value is RequestStore.Empty && configuration.value.isValid() && configuration.value != Configuration.Empty){
-        println(configuration.value)
-        viewModel.userLogin()
-        loginState.value = RequestStore.Loading()
-        userName = configuration.value.userName
-        userPassword = configuration.value.userPassword
-        serverHost = configuration.value.host
+        if (configuration.value.isValid()) {
+            scope.launch {
+                println(configuration.value)
+                userName = configuration.value.userName
+                userPassword = configuration.value.userPassword
+                serverHost = configuration.value.host
+                if (loginState.value is RequestStore.Empty && configuration.value != Configuration.Empty) {
+                    viewModel.userLogin()
+                    loginState.value = RequestStore.Loading()
+                }
+            }
+        }
     }
 
     Scaffold(
