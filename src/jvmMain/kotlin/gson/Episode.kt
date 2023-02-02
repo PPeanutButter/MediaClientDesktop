@@ -19,6 +19,8 @@ data class Episode(
     val timeLastsDescription: String
         get() = this.lasts.second2TimeDesc()
 
+    val seconds: Int get() = lasts.toInt()
+
     val bitrateDescription: String
         get() = if (this.bitrate != "") this.bitrate
         else this.length.getFileLengthDesc()
