@@ -36,6 +36,19 @@ data class Episode(
         if (episodeDisplayName.indexOf("2160p", 0, true) != -1) "4K " else "",
         if (episodeDisplayName.indexOf("hdr", 0, true) != -1) "HDR" else "")
 
+    constructor():this(
+        name = "NAS600/She-hulk Attorney At Law S01/She-Hulk.Attorney.at.Law.S01E02.HDR.2160p.WEB.h265-KOGi.mkv",
+        mime_type = "video/x-matroska",
+        length = 2886719812,
+        lasts = 1669.312,
+        desc = "Fri Oct  7 18:42:24 2022",
+        bitrate = "14Mbps",
+        score = -1,
+        watched = "watched",
+        type = "File",
+        title = "",
+        bookmark_state = "bookmark_added"
+    )
     companion object {
         val Example = Episode(
             name = "NAS600/She-hulk Attorney At Law S01/She-Hulk.Attorney.at.Law.S01E02.HDR.2160p.WEB.h265-KOGi.mkv",

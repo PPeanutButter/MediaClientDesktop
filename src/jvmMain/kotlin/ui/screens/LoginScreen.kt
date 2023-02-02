@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.Configuration
 import data.RequestStore
+import gson.Album
 import model.SharedViewModel
 import kotlinx.coroutines.launch
 import model.ConfigurationDataStore
@@ -52,6 +53,9 @@ fun LoginScreen(viewModel: SharedViewModel) {
                     loginState.value = RequestStore.Empty()
                 }
             }
+        }
+        is RequestStore.Failure -> {
+            EpisodeError((loginState.value as RequestStore.Failure<Int>).message)
         }
         else -> {
             LoginPanel(viewModel = viewModel, isLogin = loginState.value is RequestStore.Loading, configurationDataStore = configurationDataStore)
@@ -80,7 +84,6 @@ fun LoginPanel(viewModel: SharedViewModel, isLogin: Boolean, configurationDataSt
                 serverHost = configuration.value.host
                 if (loginState.value is RequestStore.Empty && configuration.value != Configuration.Empty) {
                     viewModel.userLogin()
-                    loginState.value = RequestStore.Loading()
                 }
             }
         }

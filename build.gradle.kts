@@ -49,15 +49,19 @@ compose.desktop {
         //# outputs are written to desktop/build/compose/binaries
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "花生酱的NAS"
-            packageVersion = "1.0.0"
-            description = "NAS的PC客户端，适用与Windows、Linux与MacOS"
+            packageName = "PeanutButter NAS"
+            packageVersion = "1.0.4"
+            description = "NAS Client for Windows, Linux and MacOS."
             copyright = "© 2023 PeanutButter. All rights reserved."
+            modules("java.sql")
             macOS {
                 iconFile.set(project.file("icon.png"))
             }
             windows {
                 iconFile.set(project.file("logo.ico"))
+                console = true
+                menuGroup = "PeanutButter"
+                upgradeUuid = "f86ba5f4-506c-468b-8a7c-6e61b849ba35"
             }
             linux {
                 iconFile.set(project.file("logo.png"))

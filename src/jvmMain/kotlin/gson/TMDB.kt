@@ -20,6 +20,16 @@ data class TMDB(
         return this.title
     }
 
+    constructor():this(
+        title = "She-Hulk: Attorney at Law(2022)",
+        certification = "TV-14",
+        genres = "喜剧, Sci-Fi & Fantasy",
+        runtime = "38m",
+        tagline = "You'll like her when she's angry.",
+        overview = "珍妮·沃尔特斯是一位专门处理超能人类法律案件的律师，她不仅要忙于30多岁的单身生活，还要面对自己就成为身高两米的绿皮浩克的事实。",
+        user_score_chart = 68,
+        url = "http://119.8.96.115:8081/panrunqiu/https://www.themoviedb.org/tv/92783",
+    )
     companion object {
         val Example = TMDB(
             title = "She-Hulk: Attorney at Law(2022)",
