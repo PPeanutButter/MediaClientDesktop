@@ -37,8 +37,22 @@ fun EpisodePost(sharedViewModel: SharedViewModel, tmdb: TMDB, albumRelativePath:
         PostImage(
             path = "$albumRelativePath/.post", modifier = Modifier
                 .fillMaxSize()
-                .background(Color(vibrantBody)), alpha = 0.15f
-        )
+                .background(Color(vibrantBody)), alpha = 0.3f
+        ){
+            viewScope.launch {
+                withContext(Dispatchers.Default) {
+                    var main: java.awt.Color = java.awt.Color.decode("#7367EF")
+                    try {
+                        main = palette.Palette.generate(it).toJavaColor()
+                    }catch (_:Exception){
+                        println("Palette Error")
+                    }
+                    vibrantBody = main.rgb
+                    val light = calculateColorLightValue(vibrantBody)
+                    textColor = if (light < 0.5) Color.White else Color.Black
+                }
+            }
+        }
         Column(modifier = Modifier.fillMaxSize()) {
             BackAction(modifier = Modifier.padding(start = 16.dp, top = 12.dp), tint = textColor) {
                 sharedViewModel.episodeState.value = ""
@@ -48,25 +62,9 @@ fun EpisodePost(sharedViewModel: SharedViewModel, tmdb: TMDB, albumRelativePath:
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
             ) {
                 CoverImage(albumRelativePath = albumRelativePath, modifier = Modifier
-                    .heightIn(150.dp)
-                    .aspectRatio(2f / 3f)
+                    .height(150.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { /* todo download attachments */ },
-                    onSuccess = {
-                        viewScope.launch {
-                            withContext(Dispatchers.Default) {
-                                var main: java.awt.Color = java.awt.Color.decode("#7367EF")
-                                try {
-                                    main = palette.Palette.generate(it).toJavaColor()
-                                }catch (_:Exception){
-                                    println("Palette Error")
-                                }
-                                vibrantBody = main.rgb
-                                val light = calculateColorLightValue(vibrantBody)
-                                textColor = if (light < 0.4) Color.White else Color.Black
-                            }
-                        }
-                    }
+                    .clickable { /* todo download attachments */ }
                 )
                 Spacer(modifier = Modifier.padding(end = 16.dp))
                 Column {

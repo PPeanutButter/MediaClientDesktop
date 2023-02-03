@@ -1,6 +1,5 @@
 package ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,11 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.Configuration
 import data.RequestStore
-import gson.Album
-import model.SharedViewModel
 import kotlinx.coroutines.launch
 import model.ConfigurationDataStore
 import model.EpisodeViewModel
+import model.SharedViewModel
 
 @Composable
 fun LoginScreen(viewModel: SharedViewModel) {
@@ -41,7 +39,7 @@ fun LoginScreen(viewModel: SharedViewModel) {
     when(loginState.value){
         is RequestStore.Success -> {
             val startActivity = viewModel.episodeState.value.isNotEmpty()
-            AnimatedVisibility(startActivity){
+            if(startActivity){
                 EpisodeScreen(viewModel, episodeViewModel, viewModel.episodeState.value)
             }
             if(!startActivity){

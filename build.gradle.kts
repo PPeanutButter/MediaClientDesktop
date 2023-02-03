@@ -54,6 +54,7 @@ compose.desktop {
             description = "NAS Client for Windows, Linux and MacOS."
             copyright = "© 2023 PeanutButter. All rights reserved."
             modules("java.sql")
+            modules("jdk.unsupported")
             macOS {
                 iconFile.set(project.file("icon.png"))
             }

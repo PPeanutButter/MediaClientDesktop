@@ -1,6 +1,5 @@
 package ui.component
 
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -22,8 +21,7 @@ fun AlbumCard(album: Album, viewModel: SharedViewModel) {
     ) {
         CoverImage(album.relativePath, modifier = Modifier
             .clip(CardDefaults.outlinedShape)
-            .fillMaxWidth()
-            .aspectRatio(2f / 3f))
+            .fillMaxWidth())
         Text(
             text = album.displayTitle, modifier = Modifier
                 .padding(8.dp)

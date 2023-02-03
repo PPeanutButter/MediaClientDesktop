@@ -47,7 +47,7 @@ fun EpisodeCard(episode: Episode, sharedViewModel: SharedViewModel, viewModel: E
                 .fillMaxWidth()
                 .aspectRatio(ratio),
             onSuccess = {
-                ratio = it.width.toFloat() / it.height.toFloat()
+                ratio = it
             }
         )
         EpisodeCardContent(episode = episode, sharedViewModel, viewModel)
