@@ -43,6 +43,9 @@ fun LoginScreen(viewModel: SharedViewModel) {
                 EpisodeScreen(viewModel, episodeViewModel, viewModel.episodeState.value)
             }
             if(!startActivity){
+                LaunchedEffect(Unit) {
+                    System.gc()
+                }
                 AlbumScreen(viewModel = viewModel){ // onLogout
                     viewModel.setConfiguration(Configuration.Empty)
                     scope.launch {

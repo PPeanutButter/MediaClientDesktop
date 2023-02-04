@@ -14,10 +14,14 @@ import data.Configuration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import net.harawata.appdirs.AppDirsFactory
 import network.ApiService
 import org.jetbrains.skiko.toBitmap
 import palette.ImageResizer
+import utils.MD5Utils
 import java.awt.image.BufferedImage
+import java.io.File
 import javax.imageio.ImageIO
 
 @Composable
@@ -28,12 +32,18 @@ fun CoverImage(albumRelativePath: String, modifier: Modifier = Modifier) {
     }
     LaunchedEffect(Unit) {
         MainScope().launch(Dispatchers.IO) {
-            val api = ApiService.getInstance(Configuration.Empty)
-            val r = api.getCover(albumRelativePath)
-            r.byteStream().let {
-                var a = ImageIO.read(it)
-                a = ImageResizer.resize(a, 300, 450)
-                imageBitmap = a.toBitmap().asComposeImageBitmap()
+            val c = readCache("getCover$albumRelativePath")
+            if (c == null){
+                val api = ApiService.getInstance(Configuration.Empty)
+                val r = api.getCover(albumRelativePath)
+                r.byteStream().let {
+                    var a = ImageIO.read(it)
+                    a = ImageResizer.resize(a, 300, 450)
+                    imageBitmap = a.toBitmap().asComposeImageBitmap()
+                    writeCache("getCover$albumRelativePath", a)
+                }
+            }else{
+                imageBitmap = c.toBitmap().asComposeImageBitmap()
             }
         }
     }
@@ -57,13 +67,20 @@ fun PostImage(path: String, modifier: Modifier = Modifier, alpha: Float = 1f, on
     }
     LaunchedEffect(true) {
         MainScope().launch(Dispatchers.IO) {
-            val api = ApiService.getInstance(Configuration.Empty)
-            val r = api.getPostImage(path)
-            r.byteStream().let {
-                var a = ImageIO.read(it)
-                a = ImageResizer.resize(a, 426, 240)
-                onSuccess(ImageResizer.resize(a, 106, 60))
-                imageBitmap = a.toBitmap().asComposeImageBitmap()
+            val c = readCache("getPostImage$path")
+            if (c == null){
+                val api = ApiService.getInstance(Configuration.Empty)
+                val r = api.getPostImage(path)
+                r.byteStream().let {
+                    var a = ImageIO.read(it)
+                    a = ImageResizer.resize(a, 426, 240)
+                    imageBitmap = a.toBitmap().asComposeImageBitmap()
+                    onSuccess(ImageResizer.resize(a, 106, 60))
+                    writeCache("getPostImage$path", a)
+                }
+            }else{
+                imageBitmap = c.toBitmap().asComposeImageBitmap()
+                onSuccess(ImageResizer.resize(c, 106, 60))
             }
         }
     }
@@ -82,15 +99,50 @@ fun VideoPreviewImage(path: String, modifier: Modifier = Modifier, onSuccess:(ra
     }
     LaunchedEffect(true) {
         MainScope().launch(Dispatchers.IO) {
-            val api = ApiService.getInstance(Configuration.Empty)
-            val r = api.getVideoPreview(path)
-            r.byteStream().let {
-                var a = ImageIO.read(it)
-                val ratio = a.width.toFloat()/a.height.toFloat()
+            val c = readCache("getVideoPreview$path")
+            if (c == null){
+                val api = ApiService.getInstance(Configuration.Empty)
+                val r = api.getVideoPreview(path)
+                r.byteStream().let {
+                    var a = ImageIO.read(it)
+                    val ratio = a.width.toFloat()/a.height.toFloat()
+                    onSuccess(ratio)
+                    a = ImageResizer.resize(a, (240 * ratio).toInt(), 240)
+                    imageBitmap = a.toBitmap().asComposeImageBitmap()
+                    writeCache("getVideoPreview$path", a)
+                }
+            }else{
+                imageBitmap = c.toBitmap().asComposeImageBitmap()
+                val ratio = c.width.toFloat()/c.height.toFloat()
                 onSuccess(ratio)
-                a = ImageResizer.resize(a, (240 * ratio).toInt(), 240)
-                imageBitmap = a.toBitmap().asComposeImageBitmap()
             }
         }
+    }
+}
+
+suspend fun writeCache(key: String, im: BufferedImage){
+    withContext(Dispatchers.IO){
+        val k = MD5Utils.string2MD5(key)
+        val appDirs = AppDirsFactory.getInstance()
+        val root = appDirs.getUserCacheDir("NAS", "ImageCache", "PeanutButter")
+        val p = File(root).apply {
+            this.mkdirs()
+        }
+        ImageIO.write(im, "png", File(p, "$k.png"))
+    }
+}
+
+suspend fun readCache(key: String): BufferedImage?{
+    return withContext(Dispatchers.IO) {
+        val k = MD5Utils.string2MD5(key)
+        val appDirs = AppDirsFactory.getInstance()
+        val root = appDirs.getUserCacheDir("NAS", "ImageCache", "PeanutButter")
+        val p = File(root).apply {
+            this.mkdirs()
+        }
+        val f = File(p, "$k.png")
+        return@withContext if (f.exists()) {
+            ImageIO.read(f)
+        }else null
     }
 }
