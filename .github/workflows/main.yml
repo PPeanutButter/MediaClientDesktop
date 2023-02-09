@@ -20,11 +20,11 @@ jobs:
         cache: gradle
 
 
-    - name: package
-      run: ./gradlew :packageDistributionForCurrentOS
+#     - name: package
+#       run: ./gradlew :packageDistributionForCurrentOS
     - name: Pack
       run: 
-        tar -czvf win.tar.gz build/compose/binaries/main/msi/
+        tar -czvf win.tar.gz src
     - name: Upload
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
