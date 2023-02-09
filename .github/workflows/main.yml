@@ -20,8 +20,8 @@ jobs:
         cache: gradle
 
 
-#     - name: package
-#       run: ./gradlew :packageDistributionForCurrentOS
+    - name: package
+      run: ./gradlew :packageDistributionForCurrentOS
     - name: Pack
       run: 
         tar -czvf win.tar.gz build/compose/binaries/main/msi/
