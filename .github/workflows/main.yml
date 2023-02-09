@@ -22,12 +22,9 @@ jobs:
 
     - name: package
       run: ./gradlew :packageDistributionForCurrentOS
-    - name: Pack
-      run: 
-        tar -czvf win.tar.gz build/compose/binaries/main/msi
     - name: Upload
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: 
-          win.tar.gz
+          build/compose/binaries/main/msi/*.msi
