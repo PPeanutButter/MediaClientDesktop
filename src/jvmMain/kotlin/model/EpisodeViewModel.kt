@@ -21,6 +21,11 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.channels.FileChannel
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
 import java.util.concurrent.Executors
 
 
@@ -118,7 +123,12 @@ class EpisodeViewModel {
             //用于存放当前播放剧集的字幕，每次会清空
             val ava = File(root).apply {
                 if (this.exists()){
-                    this.delete()
+                    Files.walkFileTree(this.toPath(), object : SimpleFileVisitor<Path>() {
+                        override fun visitFile(file: Path?, attrs: BasicFileAttributes?): FileVisitResult {
+                            file?.let { Files.delete(it) }
+                            return FileVisitResult.CONTINUE
+                        }
+                    })
                 }
                 this.mkdirs()
             }

@@ -60,7 +60,7 @@ compose.desktop {
             }
             windows {
                 iconFile.set(project.file("logo.ico"))
-                console = true
+//                console = true
                 menuGroup = "PeanutButter"
                 upgradeUuid = "f86ba5f4-506c-468b-8a7c-6e61b849ba35"
             }
