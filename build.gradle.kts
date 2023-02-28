@@ -50,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "PeanutButter NAS"
-            packageVersion = "1.0.4"
+            packageVersion = "1.0.5"
             description = "NAS Client for Windows, Linux and MacOS."
             copyright = "© 2023 PeanutButter. All rights reserved."
             modules("java.sql")
